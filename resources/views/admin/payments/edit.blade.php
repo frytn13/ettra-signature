@@ -1,0 +1,8 @@
+@extends('layouts.admin')
+@section('title','Verifikasi Pembayaran')
+@section('eyebrow','Penjualan')
+@section('page-title','Verifikasi Pembayaran')
+@section('content')
+<section class="dashboard-heading category-form-heading"><div><p class="dashboard-heading__eyebrow">{{ $payment->payment_number }}</p><h2>{{ $payment->order?->transaction_number }}</h2><p>{{ $payment->order?->customer_name }} · Rp{{ number_format((float)$payment->amount,0,',','.') }}</p></div></section>
+<form action="{{ route('admin.payments.update',$payment) }}" method="POST" class="modal-friendly-form">@csrf @method('PUT')<div class="category-form-card glass-panel"><div class="category-form-grid"><label class="category-form-field"><span>Keputusan <em>*</em></span><select name="decision" required><option value="verified">Setujui / Lunas</option><option value="rejected">Tolak Pembayaran</option></select></label><label class="category-form-field"><span>Alasan Penolakan</span><input name="rejection_reason" value="{{ old('rejection_reason') }}" placeholder="Wajib jika ditolak"></label><label class="category-form-field category-form-field--full"><span>Catatan</span><textarea name="notes" rows="3">{{ old('notes',$payment->notes) }}</textarea></label></div>@if($payment->proof_path)<a href="{{ route('admin.payments.proof',$payment) }}" target="_blank" class="button button--secondary">Buka Bukti Pembayaran</a>@endif</div><div class="modal-form-actions"><button type="button" class="button button--secondary" data-data-modal-close>Batal</button><button type="submit" class="button button--primary">Simpan Verifikasi</button></div></form>
+@endsection

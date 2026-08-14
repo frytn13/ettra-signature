@@ -1,0 +1,26 @@
+<div class="category-form-main">
+    <section class="category-form-card glass-panel">
+        <div class="category-form-card__header"><span class="category-form-card__icon category-form-card__icon--peach"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><path d="M4 8h16M4 16h16M7 5v6M12 5v6M17 5v6"/></svg></span><div><p class="dashboard-heading__eyebrow">Informasi Ukuran</p><h3>Identitas master ukuran</h3><p>Kode menjadi label singkat, nama memberi penjelasan, dan urutan menentukan susunan pilihan ukuran.</p></div></div>
+        <div class="category-form-grid">
+            <label class="category-form-field"><span>Kode Ukuran <em>*</em></span><input type="text" name="code" value="{{ old('code', $size->code) }}" maxlength="20" placeholder="Contoh: M" autocomplete="off" required><small>Maksimal 20 karakter. Huruf otomatis menjadi kapital.</small>@error('code')<span class="category-field-error">{{ $message }}</span>@enderror</label>
+            <label class="category-form-field"><span>Nama Ukuran <em>*</em></span><input type="text" name="name" value="{{ old('name', $size->name) }}" maxlength="80" placeholder="Contoh: Medium" autocomplete="off" required><small>Nama dapat sama dengan kode jika memang itu istilah yang dipakai usaha.</small>@error('name')<span class="category-field-error">{{ $message }}</span>@enderror</label>
+            <label class="category-form-field category-form-field--full"><span>Urutan Tampilan <em>*</em></span><input type="number" name="sort_order" value="{{ old('sort_order', $size->sort_order ?: 1) }}" min="1" max="999" step="1" required><small>Angka lebih kecil tampil lebih dahulu. Contoh: S=1, M=2, L=3, XL=4.</small>@error('sort_order')<span class="category-field-error">{{ $message }}</span>@enderror</label>
+        </div>
+    </section>
+
+    <section class="category-form-card glass-panel">
+        <div class="category-form-card__header"><span class="category-form-card__icon category-form-card__icon--green"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><path d="M12 3 20 6v5c0 5-3.4 8.5-8 10-4.6-1.5-8-5-8-10V6l8-3Z"/><path d="m9 12 2 2 4-4"/></svg></span><div><p class="dashboard-heading__eyebrow">Ketersediaan</p><h3>Status ukuran</h3><p>Ukuran aktif dapat dipilih pada variasi produk baru. Ukuran nonaktif tetap tersimpan untuk menjaga data lama.</p></div></div>
+        <div class="category-status-options">
+            <label class="category-status-option"><input type="radio" name="is_active" value="1" @checked((string) old('is_active', $size->is_active ? '1' : '0') === '1')><span class="category-status-option__surface"><span class="category-status-option__icon category-status-option__icon--green"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><path d="M20 6 9 17l-5-5"/></svg></span><span><strong>Aktif</strong><small>Dapat dipakai pada variasi produk baru.</small></span></span></label>
+            <label class="category-status-option"><input type="radio" name="is_active" value="0" @checked((string) old('is_active', $size->is_active ? '1' : '0') === '0')><span class="category-status-option__surface"><span class="category-status-option__icon category-status-option__icon--peach"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><circle cx="12" cy="12" r="9"/><path d="M8 12h8"/></svg></span><span><strong>Nonaktif</strong><small>Tidak tersedia untuk variasi baru.</small></span></span></label>
+        </div>
+        @error('is_active')<span class="category-field-error">{{ $message }}</span>@enderror
+    </section>
+</div>
+
+<aside class="category-form-side">
+    <section class="category-preview-card glass-panel"><p class="dashboard-heading__eyebrow">Preview</p><h3>Format ukuran</h3><div class="category-preview-card__sample"><span class="master-size-mark master-size-mark--preview">{{ old('code', $size->code ?: 'M') }}</span><span><strong>{{ old('name', $size->name ?: 'Medium') }}</strong><small>Urutan {{ old('sort_order', $size->sort_order ?: 2) }}</small></span></div><p>Urutan membuat pilihan ukuran tampil logis dan tidak bergantung pada pengurutan alfabet.</p></section>
+    @if ($isEditing)<section class="category-meta-card glass-panel"><p class="dashboard-heading__eyebrow">Metadata</p><h3>Riwayat data</h3><dl><div><dt>Dibuat</dt><dd>{{ $size->created_at?->format('d M Y, H:i') ?? '-' }}</dd></div><div><dt>Diperbarui</dt><dd>{{ $size->updated_at?->format('d M Y, H:i') ?? '-' }}</dd></div></dl></section>@endif
+    <section class="category-form-note glass-panel"><span class="category-form-note__icon"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><circle cx="12" cy="12" r="9"/><path d="M12 11v6M12 7h.01"/></svg></span><div><strong>Gunakan urutan yang konsisten</strong><p>Jika ada ukuran baru di antara dua ukuran lama, Anda boleh menyesuaikan nomor urut tanpa mengubah identitas ukuran.</p></div></section>
+    <div class="category-form-actions glass-panel"><a href="{{ route('admin.sizes.index') }}" class="button button--secondary">Batal</a><button type="submit" class="button button--primary"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><path d="M5 12.5 9 16l10-10"/></svg>{{ $submitLabel }}</button></div>
+</aside>

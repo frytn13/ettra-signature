@@ -1,0 +1,17 @@
+@extends('layouts.admin')
+
+@section('title', 'Atur Stok Minimum')
+@section('eyebrow', 'Persediaan')
+@section('page-title', 'Atur Stok Minimum')
+
+@section('content')
+    <section class="dashboard-heading category-form-heading"><div><p class="dashboard-heading__eyebrow">{{ $stock->warehouse?->code }} · {{ $stock->warehouse?->name }}</p><h2>{{ $stock->productVariant?->sku }}</h2><p>Atur batas minimum untuk menentukan peringatan stok menipis dan kebutuhan restock.</p></div><div class="dashboard-heading__actions"><a href="{{ route('admin.warehouse-stocks.show',$stock) }}" class="button button--secondary">Kembali</a></div></section>
+
+    @if($errors->any())<div class="user-alert user-alert--danger" role="alert"><span class="user-alert__icon"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M12 8v4m0 4h.01"/><circle cx="12" cy="12" r="9"/></svg></span><span>Periksa kembali nilai stok minimum.</span></div>@endif
+
+    <form action="{{ route('admin.warehouse-stocks.update',$stock) }}" method="POST" class="category-form-layout">
+        @csrf @method('PUT')
+        <div class="category-form-main"><section class="category-form-card glass-panel"><div class="category-form-card__header"><span class="category-form-card__icon category-form-card__icon--peach"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><path d="M4 7h16v12H4z"/></svg></span><div><p class="dashboard-heading__eyebrow">Batas Persediaan</p><h3>Stok minimum</h3><p>Status menjadi Menipis ketika stok tersedia lebih dari 0 tetapi sama dengan atau di bawah nilai minimum.</p></div></div><label class="category-form-field"><span>Stok minimum <em>*</em></span><input type="number" name="minimum_stock" min="0" step="1" value="{{ old('minimum_stock',$stock->minimum_stock) }}" required>@error('minimum_stock')<small class="category-form-error">{{ $message }}</small>@enderror</label></section><section class="stock-readonly-grid"><div><small>Fisik</small><strong>{{ number_format($stock->quantity_on_hand) }}</strong></div><div><small>Reservasi</small><strong>{{ number_format($stock->quantity_reserved) }}</strong></div><div><small>Rusak</small><strong>{{ number_format($stock->quantity_damaged) }}</strong></div><div><small>Tersedia</small><strong>{{ number_format($stock->availableQuantity()) }}</strong></div></section></div>
+        <aside class="category-form-side"><section class="category-meta-card glass-panel"><p class="dashboard-heading__eyebrow">SKU</p><h3>{{ $stock->productVariant?->sku }}</h3><dl><div><dt>Produk</dt><dd>{{ $stock->productVariant?->product?->name }}</dd></div><div><dt>Variasi</dt><dd>{{ $stock->productVariant?->color?->name }} / {{ $stock->productVariant?->size?->name }}</dd></div><div><dt>Room</dt><dd>{{ $stock->warehouse?->name }}</dd></div><div><dt>Status</dt><dd>{{ $stock->stockStatusLabel() }}</dd></div></dl></section><section class="category-form-note glass-panel"><span class="category-form-note__icon"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><circle cx="12" cy="12" r="9"/><path d="M12 11v6M12 7h.01"/></svg></span><div><strong>Tidak mengubah stok fisik</strong><p>Form ini hanya mengubah parameter minimum untuk peringatan dan rekomendasi restock.</p></div></section><div class="category-form-actions glass-panel"><a href="{{ route('admin.warehouse-stocks.show',$stock) }}" class="button button--ghost">Batal</a><button type="submit" class="button button--primary">Simpan Minimum</button></div></aside>
+    </form>
+@endsection
